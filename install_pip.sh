@@ -5,3 +5,6 @@ rm get-pip.py
 
 mkdir -p $HOME/.config/pip
 ln -s $PWD/pip.conf $HOME/.config/pip/
+
+pip install setuptools --upgrade --user
+pip3 install setuptools --upgrade --user

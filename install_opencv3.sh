@@ -2,9 +2,10 @@ SRC_DIR=${SRC_DIR:-$HOME/sources}
 INSTALL_PREFIX=${INSTALL_PREFIX:-$HOME/.local/}
 WITH_SUDO=${WITH_SUDO:-false}
 
-if [ -d $SRC_DIR ]; then
+if [ ! -d $SRC_DIR ]; then
     mkdir -p $SRC_DIR
 fi
+cd $SRC_DIR
 
 deps=(ffmpeg libjpeg-dev libpng-dev libtiff-dev libjasper-dev libavcodec-dev \
 libavformat-dev libv4l-dev libswscale-dev libavutil-dev libgtk2.0-dev libtbb2 libtbb-dev)
@@ -16,7 +17,8 @@ done
 
 if [ ${#missing[@]} -gt 0 ]; then
     if [ "$WITH_SUDO" = false ]; then
-        echo -e "\033[31mWARNING:\033[0m package(s) '"${missing[@]}\' was not installed.
+        echo "\033[31mWARNING:\033[0m package(s) '"${missing[@]}\' was not installed.
+        exit -1
     else
         sudo apt install -y "${missing[@]}"
     fi

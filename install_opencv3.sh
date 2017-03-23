@@ -31,20 +31,30 @@ pip install numpy --user --upgrade
 
 if [ ! -d "opencv" ]; then
     git clone git@github.com:opencv/opencv.git
+else
+    cd opencv
+    cur_branch=$(git name-rev --name-only HEAD)
+    if [ $cur_branch != "master" ]; then
+        git checkout master
+    fi
+    git pull origin master
+    cd ..
 fi
-if [ $WITH_EXTRA = true ] && [ ! -d "opencv_contrib" ]; then
-    git clone git@github.com:opencv/opencv_contrib.git
+if [ $WITH_EXTRA = true ]; then
+    if [ ! -d "opencv_contrib" ]; then
+        git clone git@github.com:opencv/opencv_contrib.git
+    else
+        cd opencv_contrib
+        cur_branch=$(git name-rev --name-only HEAD)
+        if [ $cur_branch != "master" ]; then
+            git checkout master
+        fi
+        git pull origin master
+        cd ..
+    fi
 fi
 
 cd opencv
-if [[ `git branch --list 3.2.0 ` ]]; then
-    cur_branch=$(git name-rev --name-only HEAD)
-    if [ $cur_branch != "3.2.0" ]; then
-        git checkout 3.2.0
-    fi
-else
-    git checkout 3.2.0 -b 3.2.0
-fi
 if [ -d "build" ]; then
     rm -rf build
 fi

@@ -37,18 +37,17 @@ newvenv() {
 
 cdc() {
     PORT=$(printf "2%03d" $1)
-    ssh -p $PORT kchen@cdcgw.ie.cuhk.edu.hk
+    ssh -p $PORT kchen@cdcgw.ie.cuhk.edu.hk -X
 }
 
 ws() {
-    ssh kchen@192.168.72.$1
+    ssh kchen@192.168.72.$1 -X
 }
 
 alias vim="nvim"
 alias ll="ls -alFh"
 alias l="ls -alFh"
-alias sshsz="ssh kchen@120.77.49.217"
-alias sshqd="ssh kchen@gzhplus.com"
 
 # set PATH so it includes user's private bin directories
-PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.local/bin:$PATH"
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64:$HOME/.local/lib:$LD_LIBRARY_PATH

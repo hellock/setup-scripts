@@ -1,5 +1,7 @@
 SRC_DIR=${SRC_DIR:-$HOME/sources}
 INSTALL_PREFIX=${INSTALL_PREFIX:-$HOME/.local/}
+EXTRA_OPTIONS=${EXTRA_OPTIONS:-""}
+WITH_EXTRA=${WITH_EXTRA:-false}
 WITH_SUDO=${WITH_SUDO:-false}
 
 if [ ! -d $SRC_DIR ]; then
@@ -8,7 +10,7 @@ fi
 cd $SRC_DIR
 
 deps=(ffmpeg libjpeg-dev libpng-dev libtiff-dev libjasper-dev libavcodec-dev \
-libavformat-dev libv4l-dev libswscale-dev libavutil-dev libgtk2.0-dev libtbb2 libtbb-dev)
+libavformat-dev libv4l-dev libswscale-dev libgtk2.0-dev libtbb2 libtbb-dev)
 
 missing=()
 for lib in ${deps[@]}; do
@@ -16,28 +18,47 @@ for lib in ${deps[@]}; do
 done
 
 if [ ${#missing[@]} -gt 0 ]; then
-    if [ "$WITH_SUDO" = false ]; then
-        echo "\033[31mWARNING:\033[0m package(s) '"${missing[@]}\' was not installed.
+    if [ $WITH_SUDO = false ]; then
+        echo -e "\033[31mWARNING:\033[0m package(s) '"${missing[@]}\' was not installed.
         exit -1
     else
         sudo apt install -y "${missing[@]}"
     fi
 fi
 
-git clone git@github.com:opencv/opencv.git
-git clone git@github.com:opencv/opencv_contrib.git
+pip3 install numpy --user --upgrade
+pip install numpy --user --upgrade
+
+if [ ! -d "opencv" ]; then
+    git clone git@github.com:opencv/opencv.git
+fi
+if [ $WITH_EXTRA = true ] && [ ! -d "opencv_contrib" ]; then
+    git clone git@github.com:opencv/opencv_contrib.git
+fi
+
 cd opencv
+if [[ `git branch --list 3.2.0 ` ]]; then
+    cur_branch=$(git name-rev --name-only HEAD)
+    if [ $cur_branch != "3.2.0" ]; then
+        git checkout 3.2.0
+    fi
+else
+    git checkout 3.2.0 -b 3.2.0
+fi
+if [ -d "build" ]; then
+    rm -rf build
+fi
+if [ $WITH_EXTRA = true ]; then
+    EXTRA_OPTIONS="-DOPENCV_EXTRA_MODULES_PATH=$SRC_DIR/opencv_contrib/modules
+                   -DBUILD_opencv_cnn_3dobj=OFF
+                   -DBUILD_opencv_dnn=OFF
+                   -DBUILD_opencv_dnn_modern=OFF
+                   -DBUILD_opencv_dnns_easily_fooled=OFF"
+fi
 mkdir build
 cd build
-cmake -DCMAKE_BUILD_TYPE=RELEASE \
--DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
--DWITH_TBB=ON \
--DOPENCV_EXTRA_MODULES_PATH=$SRC_DIR/opencv_contrib/modules \
--DBUILD_opencv_cnn_3dobj=OFF \
--DBUILD_opencv_dnn=OFF \
--DBUILD_opencv_dnn_modern=OFF \
--DBUILD_opencv_dnns_easily_fooled=OFF \
-..
+cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
+      -DWITH_TBB=ON $EXTRA_OPTIONS ..
 
 make -j
 make install

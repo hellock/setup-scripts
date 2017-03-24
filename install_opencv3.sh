@@ -1,3 +1,4 @@
+#!/bin/bash
 SRC_DIR=${SRC_DIR:-$HOME/sources}
 INSTALL_PREFIX=${INSTALL_PREFIX:-$HOME/.local/}
 EXTRA_OPTIONS=${EXTRA_OPTIONS:-""}

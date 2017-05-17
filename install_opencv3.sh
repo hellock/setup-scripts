@@ -31,7 +31,7 @@ pip3 install numpy --user --upgrade
 pip install numpy --user --upgrade
 
 if [ ! -d "opencv" ]; then
-    git clone git@github.com:opencv/opencv.git
+    git clone https://github.com/opencv/opencv.git
 else
     cd opencv
     cur_branch=$(git name-rev --name-only HEAD)
@@ -43,7 +43,7 @@ else
 fi
 if [ $WITH_EXTRA = true ]; then
     if [ ! -d "opencv_contrib" ]; then
-        git clone git@github.com:opencv/opencv_contrib.git
+        git clone https://github.com/opencv/opencv_contrib.git
     else
         cd opencv_contrib
         cur_branch=$(git name-rev --name-only HEAD)

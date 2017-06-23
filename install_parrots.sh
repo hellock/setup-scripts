@@ -23,5 +23,9 @@ PARROTS_HOME=$PARROTS_HOME GTEST_ROOT=$PARROTS_HOME/gtest ./paman build
 PARROTS_HOME=$PARROTS_HOME GTEST_ROOT=$PARROTS_HOME/gtest \
 LD_LIBRARY_PATH=$PARROTS_HOME/parrots/build:$PARROTS_HOME/PPL2/lib:$LD_LIBRARY_PATH ./paman test
 
-echo "Installation done, please run `source ~/.profile` or restart the terminal 
+if [ ! -f $HOME/.parrots/env.yaml ]; then
+	$PARROTS_HOME/parrots/tools/parrots env init
+fi
+
+echo "Installation done, please run \"source ~/.profile\" or restart the terminal 
       if this is the first time to install parrots."

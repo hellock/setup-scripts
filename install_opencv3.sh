@@ -69,7 +69,7 @@ fi
 mkdir build
 cd build
 cmake -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX \
-      -DWITH_TBB=ON $EXTRA_OPTIONS ..
+      -DWITH_TBB=ON -DWITH_OPENCL=OFF $EXTRA_OPTIONS ..
 
 make -j
 make install

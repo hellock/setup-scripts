@@ -1,4 +1,5 @@
 #!/bin/bash
+VERSION=${VERSION:-"master"}
 SRC_DIR=${SRC_DIR:-$HOME/sources}
 INSTALL_PREFIX=${INSTALL_PREFIX:-$HOME/.local/}
 EXTRA_OPTIONS=${EXTRA_OPTIONS:-""}
@@ -35,10 +36,15 @@ if [ ! -d "opencv" ]; then
 else
     cd opencv
     cur_branch=$(git name-rev --name-only HEAD)
-    if [ $cur_branch != "master" ]; then
-        git checkout master
+    if [ $cur_branch != $VERSION ]; then
+        if [ $VERSION = "master" ]; then
+            git checkout master
+        else
+            git fetch origin
+            git checkout tags/$VERSION -b $VERSION
+        fi
     fi
-    git pull origin master
+    git pull
     cd ..
 fi
 if [ $WITH_EXTRA = true ]; then
@@ -47,10 +53,15 @@ if [ $WITH_EXTRA = true ]; then
     else
         cd opencv_contrib
         cur_branch=$(git name-rev --name-only HEAD)
-        if [ $cur_branch != "master" ]; then
-            git checkout master
+        if [ $cur_branch != $VERSION ]; then
+            if [ $VERSION = "master" ]; then
+                git checkout master
+            else
+                git fetch origin
+                git checkout tags/$VERSION -b $VERSION
+            fi
         fi
-        git pull origin master
+        git pull
         cd ..
     fi
 fi

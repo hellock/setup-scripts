@@ -14,7 +14,7 @@ pip3 install neovim --user
 BUNDLE_DIR=$NVIM_CFG_DIR/bundle
 mkdir $BUNDLE_DIR
 cd $BUNDLE_DIR
-git clone git@github.com:VundleVim/Vundle.vim.git
+git clone https://github.com/VundleVim/Vundle.vim.git
 nvim -c VundleUpdate -c quitall
 cd $BUNDLE_DIR/YouCompleteMe
 python3 ./install.py --clang-completer

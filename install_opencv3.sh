@@ -6,13 +6,17 @@ EXTRA_OPTIONS=${EXTRA_OPTIONS:-""}
 WITH_EXTRA=${WITH_EXTRA:-false}
 WITH_SUDO=${WITH_SUDO:-false}
 
+echo "opencv version to be installed: $VERSION"
+echo "source code directory: $SRC_DIR"
+echo "extra cmake options: $EXTRA_OPTIONS"
+
 if [ ! -d $SRC_DIR ]; then
     mkdir -p $SRC_DIR
 fi
 cd $SRC_DIR
 
-deps=(ffmpeg libjpeg-dev libpng-dev libtiff-dev libjasper-dev libavcodec-dev \
-libavformat-dev libv4l-dev libswscale-dev libgtk2.0-dev libtbb2 libtbb-dev)
+deps=(ffmpeg libx264-dev libjpeg-dev libpng-dev libtiff-dev libavcodec-dev \
+libavformat-dev libv4l-dev libswscale-dev libgtk-3-dev libtbb2 libtbb-dev)
 
 missing=()
 for lib in ${deps[@]}; do
